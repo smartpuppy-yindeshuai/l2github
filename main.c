@@ -11,24 +11,10 @@
  */
 
 #include <mcs51/8052.h>
+#include "delay.h"
 
 /* ---- Pin Definitions ---- */
 __sbit __at (0x90) LED;      /* P1.0 — LED on Port 1, Pin 0 */
-
-/* ---- Function Prototypes ---- */
-void delay_ms(unsigned int ms);
-
-/**
- * @brief  Millisecond delay (approximate, depends on crystal frequency)
- * @param  ms  Number of milliseconds to delay
- * @note   Calibrated for 11.0592 MHz crystal
- */
-void delay_ms(unsigned int ms) {
-    unsigned int i, j;
-    for (i = 0; i < ms; i++)
-        for (j = 0; j < 120; j++)
-            ;   /* ~120 iterations ≈ 1 ms at 11.0592 MHz */
-}
 
 /**
  * @brief  Main entry point

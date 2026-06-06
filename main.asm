@@ -9,6 +9,7 @@
 ; Public variables in this module
 ;--------------------------------------------------------
 	.globl _main
+	.globl _delay_ms
 	.globl _LED
 	.globl _TF2
 	.globl _EXF2
@@ -129,7 +130,6 @@
 	.globl _DPL
 	.globl _SP
 	.globl _P0
-	.globl _delay_ms
 ;--------------------------------------------------------
 ; special function registers
 ;--------------------------------------------------------
@@ -272,7 +272,6 @@ _LED	=	0x0090
 ;--------------------------------------------------------
 ; overlayable items in internal ram
 ;--------------------------------------------------------
-	.area	OSEG    (OVR,DATA)
 ;--------------------------------------------------------
 ; Stack segment in internal ram
 ;--------------------------------------------------------
@@ -411,17 +410,13 @@ __sdcc_program_startup:
 ;--------------------------------------------------------
 	.area CSEG    (CODE)
 ;------------------------------------------------------------
-;Allocation info for local variables in function 'delay_ms'
+;Allocation info for local variables in function 'main'
 ;------------------------------------------------------------
-;ms            Allocated to registers r6 r7 
-;i             Allocated to registers r4 r5 
-;j             Allocated to registers r2 r3 
-;------------------------------------------------------------
-;	main.c:26: void delay_ms(unsigned int ms) {
+;	main.c:22: void main(void) {
 ;	-----------------------------------------
-;	 function delay_ms
+;	 function main
 ;	-----------------------------------------
-_delay_ms:
+_main:
 	ar7 = 0x07
 	ar6 = 0x06
 	ar5 = 0x05
@@ -430,62 +425,23 @@ _delay_ms:
 	ar2 = 0x02
 	ar1 = 0x01
 	ar0 = 0x00
-	mov	r6, dpl
-	mov	r7, dph
-;	main.c:28: for (i = 0; i < ms; i++)
-	mov	r4,#0x00
-	mov	r5,#0x00
-00107$:
-	clr	c
-	mov	a,r4
-	subb	a,r6
-	mov	a,r5
-	subb	a,r7
-	jnc	00109$
-;	main.c:29: for (j = 0; j < 120; j++)
-	mov	r2,#0x78
-	mov	r3,#0x00
-00105$:
-	dec	r2
-	cjne	r2,#0xff,00138$
-	dec	r3
-00138$:
-	mov	a,r2
-	orl	a,r3
-	jnz	00105$
-;	main.c:28: for (i = 0; i < ms; i++)
-	inc	r4
-	cjne	r4,#0x00,00107$
-	inc	r5
-	sjmp	00107$
-00109$:
-;	main.c:31: }
-	ret
-;------------------------------------------------------------
-;Allocation info for local variables in function 'main'
-;------------------------------------------------------------
-;	main.c:36: void main(void) {
-;	-----------------------------------------
-;	 function main
-;	-----------------------------------------
-_main:
-;	main.c:38: P1 = 0xFF;
+;	main.c:24: P1 = 0xFF;
 	mov	_P1,#0xff
-;	main.c:40: while (1) {
+;	main.c:26: while (1) {
 00102$:
-;	main.c:41: LED = 0;                /* LED ON  (active-low) */
+;	main.c:27: LED = 0;                /* LED ON  (active-low) */
 ;	assignBit
 	clr	_LED
-;	main.c:42: delay_ms(500);          /* Wait 500 ms          */
+;	main.c:28: delay_ms(500);          /* Wait 500 ms          */
 	mov	dptr,#0x01f4
 	lcall	_delay_ms
-;	main.c:44: LED = 1;                /* LED OFF              */
+;	main.c:30: LED = 1;                /* LED OFF              */
 ;	assignBit
 	setb	_LED
-;	main.c:45: delay_ms(500);          /* Wait 500 ms          */
+;	main.c:31: delay_ms(500);          /* Wait 500 ms          */
 	mov	dptr,#0x01f4
 	lcall	_delay_ms
-;	main.c:47: }
+;	main.c:33: }
 	sjmp	00102$
 	.area CSEG    (CODE)
 	.area CONST   (CODE)

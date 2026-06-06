@@ -8,6 +8,7 @@
 *.map
 *.mem
 *.lk
+*.asm
 
 # Editor files
 .DS_Store
