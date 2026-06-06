@@ -1,0 +1,16 @@
+# Build outputs
+*.ihx
+*.hex
+*.rel
+*.rst
+*.lst
+*.sym
+*.map
+*.mem
+*.lk
+
+# Editor files
+.DS_Store
+.vscode/
+*.swp
+*~
